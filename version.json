@@ -1,7 +1,7 @@
 {
-  "versionCode": 2,
-  "versionName": "1.1.0",
-  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v1.1.0/app-release.apk",
-  "changelog": "🚀 Nouvelle version!\n\n- Changement de l'émoji: 👋 → 🚀\n- Interface améliorée\n\nInstallez cette mise à jour maintenant!",
-  "mandatory": false
+  "versionCode": 3,
+  "versionName": "1.1.1",
+  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v1.1.1/app-release.apk",
+  "changelog": "🔧 Correctif important!\n\n- Correction du bug de cache\n- Les mises à jour sont maintenant détectées correctement\n\nInstallez cette version pour profiter du système OTA!",
+  "mandatory": true
 }
