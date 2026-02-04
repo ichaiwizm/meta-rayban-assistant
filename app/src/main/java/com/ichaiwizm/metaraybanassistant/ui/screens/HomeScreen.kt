@@ -24,7 +24,7 @@ fun HomeScreen(
     ) {
         // Logo / Title
         Text(
-            text = "👋",
+            text = "🚀",
             style = MaterialTheme.typography.displayLarge
         )
 
