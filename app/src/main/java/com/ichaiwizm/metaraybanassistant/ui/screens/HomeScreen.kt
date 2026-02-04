@@ -5,16 +5,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.ichaiwizm.metaraybanassistant.R
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    var connectionStatus by remember { mutableStateOf("Déconnecté") }
-    var isConnected by remember { mutableStateOf(false) }
-
+fun HomeScreen(
+    onCheckUpdate: () -> Unit,
+    updateStatus: String,
+    currentVersion: String,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -22,100 +22,74 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Title
+        // Logo / Title
         Text(
-            text = stringResource(R.string.app_name),
+            text = "👋",
+            style = MaterialTheme.typography.displayLarge
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Meta Ray-Ban Assistant",
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Status Card
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
-            )
-        ) {
-            Column(
+        // Version actuelle
+        Text(
+            text = "Version $currentVersion",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        // Status de mise à jour
+        if (updateStatus.isNotEmpty()) {
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(vertical = 16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
             ) {
                 Text(
-                    text = "Statut",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = connectionStatus,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    text = updateStatus,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Connect/Disconnect Button
+        // Bouton pour vérifier les mises à jour
         Button(
-            onClick = {
-                // TODO: Implement glasses connection logic
-                isConnected = !isConnected
-                connectionStatus = if (isConnected) "Connecté" else "Déconnecté"
-            },
+            onClick = onCheckUpdate,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isConnected)
-                    MaterialTheme.colorScheme.error
-                else
-                    MaterialTheme.colorScheme.primary
-            )
+                .height(56.dp)
         ) {
             Text(
-                text = if (isConnected)
-                    stringResource(R.string.disconnect)
-                else
-                    stringResource(R.string.connect_glasses),
+                text = "Vérifier les mises à jour",
                 style = MaterialTheme.typography.titleMedium
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Capture Photo Button
-        Button(
-            onClick = {
-                // TODO: Implement photo capture logic
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            enabled = isConnected,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
-            )
-        ) {
-            Text(
-                text = stringResource(R.string.capture_photo),
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Information Text
         Text(
-            text = "Connectez vos lunettes Meta Ray-Ban pour commencer à utiliser l'assistant.",
-            style = MaterialTheme.typography.bodyMedium,
+            text = "Appuyez sur le bouton pour vérifier s'il y a une nouvelle version disponible.",
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
