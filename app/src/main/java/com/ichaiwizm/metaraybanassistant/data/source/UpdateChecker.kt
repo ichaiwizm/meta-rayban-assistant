@@ -30,6 +30,7 @@ class UpdateChecker(
         try {
             val request = Request.Builder()
                 .url(updateJsonUrl)
+                .addHeader("Cache-Control", "no-cache")
                 .build()
 
             val response = client.newCall(request).execute()
