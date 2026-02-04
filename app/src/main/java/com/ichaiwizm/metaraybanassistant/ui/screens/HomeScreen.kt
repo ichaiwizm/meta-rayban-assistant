@@ -88,9 +88,9 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Appuyez sur le bouton pour vérifier s'il y a une nouvelle version disponible.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            text = "✨ Système OTA actif! Les mises à jour se détectent automatiquement.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
