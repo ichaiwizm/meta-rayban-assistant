@@ -28,8 +28,11 @@ class UpdateChecker(
      */
     suspend fun checkForUpdate(currentVersionCode: Int): Result<AppVersion?> = withContext(Dispatchers.IO) {
         try {
+            // Ajouter timestamp pour forcer le cache bust
+            val urlWithTimestamp = "$updateJsonUrl?t=${System.currentTimeMillis()}"
+
             val request = Request.Builder()
-                .url(updateJsonUrl)
+                .url(urlWithTimestamp)
                 .addHeader("Cache-Control", "no-cache")
                 .build()
 
