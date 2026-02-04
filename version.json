@@ -1,7 +1,7 @@
 {
-  "versionCode": 4,
-  "versionName": "1.2.0",
-  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v1.2.0/app-release.apk",
-  "changelog": "✨ Nouvelle version disponible!\n\n- Message \"Système OTA actif\" en bleu\n- Interface améliorée\n- Texte plus visible\n\nTestez le système de mise à jour automatique!",
-  "mandatory": false
+  "versionCode": 5,
+  "versionName": "1.2.1",
+  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v1.2.1/app-release.apk",
+  "changelog": "⚡ FIX DEFINITIF du cache!\n\nCette version utilise un timestamp pour forcer le rafraîchissement.\n\nLe système OTA va ENFIN fonctionner correctement!",
+  "mandatory": true
 }
