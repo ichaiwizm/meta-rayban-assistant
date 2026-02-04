@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meta Ray-Ban Assistant</string>
+
+    <!-- Home Screen -->
+    <string name="connect_glasses">Connecter aux lunettes</string>
+    <string name="capture_photo">Capturer une photo</string>
+    <string name="disconnect">Déconnecter</string>
+
+    <!-- Status Messages -->
+    <string name="status_disconnected">Déconnecté</string>
+    <string name="status_connecting">Connexion en cours…</string>
+    <string name="status_connected">Connecté</string>
+    <string name="status_scanning">Recherche des lunettes…</string>
+
+    <!-- Permissions -->
+    <string name="permission_bluetooth_rationale">L\'application nécessite l\'accès Bluetooth pour se connecter aux lunettes Meta Ray-Ban.</string>
+    <string name="permission_location_rationale">L\'accès à la localisation est requis pour scanner les appareils Bluetooth à proximité.</string>
+    <string name="permission_microphone_rationale">L\'accès au microphone est nécessaire pour l\'assistant vocal.</string>
+    <string name="permission_denied">Permission refusée. Certaines fonctionnalités peuvent ne pas être disponibles.</string>
+
+    <!-- Errors -->
+    <string name="error_bluetooth_not_supported">Bluetooth LE non pris en charge sur cet appareil</string>
+    <string name="error_connection_failed">Échec de la connexion aux lunettes</string>
+    <string name="error_no_device_found">Aucune lunette Meta Ray-Ban trouvée</string>
+
+    <!-- Settings -->
+    <string name="settings">Paramètres</string>
+    <string name="claude_api_key">Clé API Claude</string>
+</resources>

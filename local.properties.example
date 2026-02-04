@@ -1,0 +1,11 @@
+## This file must be copied to local.properties and filled with your credentials
+## local.properties is already in .gitignore and will not be committed
+
+# Android SDK path (update with your actual path)
+sdk.dir=/home/ichai/Android/Sdk
+
+# GitHub credentials for Meta Wearables SDK (required)
+# Create a Personal Access Token at: https://github.com/settings/tokens
+# Required scope: read:packages
+github.username=ichaiwizm
+github.token=ghp_YOUR_TOKEN_HERE
