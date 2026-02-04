@@ -103,6 +103,14 @@ class MainActivity : ComponentActivity() {
                 1
             }
 
+            // Debug log
+            android.util.Log.d("UpdateCheck", "Current versionCode: $currentVersionCode")
+            Toast.makeText(
+                this@MainActivity,
+                "Version actuelle: $currentVersionCode",
+                Toast.LENGTH_LONG
+            ).show()
+
             val result = updateChecker.checkForUpdate(currentVersionCode)
 
             result.onSuccess { appVersion ->

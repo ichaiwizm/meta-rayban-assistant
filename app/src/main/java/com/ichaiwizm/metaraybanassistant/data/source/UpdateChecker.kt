@@ -49,6 +49,11 @@ class UpdateChecker(
 
             val latestVersion = gson.fromJson(jsonString, AppVersion::class.java)
 
+            // Debug logs
+            android.util.Log.d("UpdateCheck", "Latest versionCode from server: ${latestVersion.versionCode}")
+            android.util.Log.d("UpdateCheck", "Current versionCode: $currentVersionCode")
+            android.util.Log.d("UpdateCheck", "Update available: ${latestVersion.versionCode > currentVersionCode}")
+
             // Vérifier si une mise à jour est disponible
             if (latestVersion.versionCode > currentVersionCode) {
                 Result.success(latestVersion)
