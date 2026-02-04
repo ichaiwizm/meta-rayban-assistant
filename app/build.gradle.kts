@@ -11,8 +11,8 @@ android {
         applicationId = "com.ichaiwizm.metaraybanassistant"
         minSdk = 24  // Android 7.0
         targetSdk = 34
-        versionCode = 8
-        versionName = "1.5.0"
+        versionCode = 9
+        versionName = "1.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

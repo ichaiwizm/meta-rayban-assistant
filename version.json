@@ -1,7 +1,7 @@
 {
-  "versionCode": 8,
-  "versionName": "1.5.0",
-  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v1.5.0/app-release.apk",
-  "changelog": "✅ Test final du système OTA!\n\n- Émoji: 🔍 → ✅\n- versionCode: 7 → 8\n\nSi tu vois cette mise à jour, le système OTA fonctionne parfaitement!",
+  "versionCode": 9,
+  "versionName": "1.6.0",
+  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v1.6.0/app-release.apk",
+  "changelog": "🚀 CORRECTIFS MAJEURS!\n\n✅ Cache GitHub entièrement contourné\n✅ Triple protection anti-cache (timestamp+random+headers)\n✅ OkHttp cache désactivé\n✅ Validation JSON renforcée\n✅ Logs détaillés pour debug\n✅ Fermeture automatique des connexions\n\nLe système OTA devrait maintenant fonctionner PARFAITEMENT!",
   "mandatory": false
 }

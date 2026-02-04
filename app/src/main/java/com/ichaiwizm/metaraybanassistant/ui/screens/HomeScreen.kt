@@ -24,7 +24,7 @@ fun HomeScreen(
     ) {
         // Logo / Title
         Text(
-            text = "✅",
+            text = "🚀",
             style = MaterialTheme.typography.displayLarge
         )
 
@@ -88,7 +88,7 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "✅ Système OTA testé! Si tu vois ce message, la mise à jour fonctionne!",
+            text = "🚀 Système OTA CORRIGÉ! Cache GitHub contourné avec succès.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,

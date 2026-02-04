@@ -17,6 +17,7 @@ class UpdateChecker(
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
+        .cache(null)  // Désactiver explicitement le cache OkHttp
         .build()
 
     private val gson = Gson()
@@ -28,37 +29,57 @@ class UpdateChecker(
      */
     suspend fun checkForUpdate(currentVersionCode: Int): Result<AppVersion?> = withContext(Dispatchers.IO) {
         try {
-            // Ajouter timestamp pour forcer le cache bust
-            val urlWithTimestamp = "$updateJsonUrl?t=${System.currentTimeMillis()}"
+            // Triple protection anti-cache: timestamp + random + headers multiples
+            val cacheBuster = "${System.currentTimeMillis()}_${kotlin.random.Random.nextInt(100000)}"
+            val urlWithTimestamp = "$updateJsonUrl?v=$cacheBuster"
 
             val request = Request.Builder()
                 .url(urlWithTimestamp)
-                .addHeader("Cache-Control", "no-cache")
+                .cacheControl(okhttp3.CacheControl.FORCE_NETWORK)  // Force réseau
+                .addHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0")
+                .addHeader("Pragma", "no-cache")  // HTTP/1.0
+                .addHeader("Expires", "0")
                 .build()
 
             val response = client.newCall(request).execute()
 
-            if (!response.isSuccessful) {
-                return@withContext Result.failure(
-                    Exception("Erreur HTTP: ${response.code}")
-                )
-            }
+            response.use { resp ->  // Assure la fermeture de la réponse
+                if (!resp.isSuccessful) {
+                    android.util.Log.e("UpdateCheck", "HTTP Error: ${resp.code}")
+                    return@withContext Result.failure(
+                        Exception("Erreur HTTP: ${resp.code}")
+                    )
+                }
 
-            val jsonString = response.body?.string()
-                ?: return@withContext Result.failure(Exception("Réponse vide"))
+                val jsonString = resp.body?.string()
+                    ?: return@withContext Result.failure(Exception("Réponse vide"))
 
-            val latestVersion = gson.fromJson(jsonString, AppVersion::class.java)
+                android.util.Log.d("UpdateCheck", "JSON Response: $jsonString")
 
-            // Debug logs
-            android.util.Log.d("UpdateCheck", "Latest versionCode from server: ${latestVersion.versionCode}")
-            android.util.Log.d("UpdateCheck", "Current versionCode: $currentVersionCode")
-            android.util.Log.d("UpdateCheck", "Update available: ${latestVersion.versionCode > currentVersionCode}")
+                val latestVersion = try {
+                    gson.fromJson(jsonString, AppVersion::class.java)
+                } catch (e: com.google.gson.JsonSyntaxException) {
+                    android.util.Log.e("UpdateCheck", "JSON Parse Error: ${e.message}")
+                    return@withContext Result.failure(Exception("JSON invalide: ${e.message}"))
+                }
 
-            // Vérifier si une mise à jour est disponible
-            if (latestVersion.versionCode > currentVersionCode) {
-                Result.success(latestVersion)
-            } else {
-                Result.success(null)
+                // Validation des champs requis
+                if (latestVersion.versionCode == 0 || latestVersion.downloadUrl.isBlank()) {
+                    android.util.Log.e("UpdateCheck", "Invalid version data")
+                    return@withContext Result.failure(Exception("Données de version invalides"))
+                }
+
+                // Debug logs
+                android.util.Log.d("UpdateCheck", "Latest versionCode from server: ${latestVersion.versionCode}")
+                android.util.Log.d("UpdateCheck", "Current versionCode: $currentVersionCode")
+                android.util.Log.d("UpdateCheck", "Update available: ${latestVersion.versionCode > currentVersionCode}")
+
+                // Vérifier si une mise à jour est disponible
+                if (latestVersion.versionCode > currentVersionCode) {
+                    Result.success(latestVersion)
+                } else {
+                    Result.success(null)
+                }
             }
         } catch (e: Exception) {
             Result.failure(e)
