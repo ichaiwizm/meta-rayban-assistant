@@ -1,8 +1,8 @@
 {
-  "versionCode": 16,
-  "versionName": "2.2.0",
-  "changelog": "🎉 v2.2.0 - Enregistrement VISIBLE!\n\n✅ NOUVEAU:\n- État enregistrement affiché en temps réel\n- Toast 'Enregistrement réussi!' \n- Card verte quand enregistré\n- Bouton '✅ Enregistré' désactivé après\n- Statuts clairs et visibles\n\n✨ Flow complet:\n1. S'enregistrer avec Meta AI\n2. Meta AI ouvre et connecte\n3. Retour app → BOOM 🎉 Toast!\n4. Card verte + Bouton désactivé\n5. Connecter aux lunettes\n\n📝 Tu VOIS maintenant ce qui se passe!",
-  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.2.0/app-release.apk",
+  "versionCode": 17,
+  "versionName": "2.2.1",
+  "changelog": "🎨 v2.2.1 - UI Claire!\n\n✅ AMÉLIORÉ:\n- Card statut TOUJOURS visible\n- Messages adaptés selon état\n- Bouton désactivé si pas enregistré\n- Instructions claires:\n  * ⚠️ Rouge: Enregistre-toi d'abord\n  * ✅ Vert: Prêt! Clique Connecter\n\n✨ Plus de confusion!\n- ⚫ NON CONNECTÉ / 🟢 SESSION ACTIVE\n- 'Prêt à connecter' ou 'Enregistre-toi'\n- Bouton clair et désactivé si besoin\n\n📝 Tout est évident maintenant!",
+  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.2.1/app-release.apk",
   "releaseDate": "2026-02-05",
   "minAndroidVersion": 29,
   "targetAndroidVersion": 34
