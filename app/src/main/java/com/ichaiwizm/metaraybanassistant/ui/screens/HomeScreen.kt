@@ -14,6 +14,7 @@ fun HomeScreen(
     updateStatus: String,
     currentVersion: String,
     onConnectBluetooth: () -> Unit = {},
+    onRegisterWearables: () -> Unit = {},
     isBluetoothConnected: Boolean = false,
     bluetoothStatus: String = "",
     modifier: Modifier = Modifier
@@ -144,7 +145,22 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Bluetooth button
+        // Register button (first time setup)
+        OutlinedButton(
+            onClick = onRegisterWearables,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+        ) {
+            Text(
+                text = "1. S'enregistrer avec Meta AI",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Connect button
         Button(
             onClick = onConnectBluetooth,
             modifier = Modifier
@@ -158,9 +174,19 @@ fun HomeScreen(
                 ButtonDefaults.buttonColors()
         ) {
             Text(
-                text = if (isBluetoothConnected) "Déconnecter" else "Connecter aux lunettes",
+                text = if (isBluetoothConnected) "Déconnecter" else "2. Connecter aux lunettes",
                 style = MaterialTheme.typography.titleMedium
             )
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "ℹ️ Première utilisation: enregistre-toi d'abord avec Meta AI app",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
     }
 }

@@ -18,7 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.ichaiwizm.metaraybanassistant.data.model.BluetoothDevice
 import com.ichaiwizm.metaraybanassistant.data.model.ConnectionState
 import com.ichaiwizm.metaraybanassistant.data.source.ApkInstaller
-import com.ichaiwizm.metaraybanassistant.data.source.BluetoothManager
+import com.ichaiwizm.metaraybanassistant.data.source.WearablesManager
 import com.ichaiwizm.metaraybanassistant.data.source.UpdateChecker
 import com.ichaiwizm.metaraybanassistant.ui.screens.DeviceSelectionScreen
 import com.ichaiwizm.metaraybanassistant.ui.screens.HomeScreen
@@ -28,7 +28,7 @@ import java.io.File
 
 class MainActivity : ComponentActivity() {
     private val updateChecker = UpdateChecker()
-    private val bluetoothManager by lazy { BluetoothManager(applicationContext) }
+    private val wearablesManager by lazy { WearablesManager(applicationContext) }
 
     // Update state
     private var updateStatus by mutableStateOf("")
@@ -67,9 +67,9 @@ class MainActivity : ComponentActivity() {
             "1.0.0"
         }
 
-        // Collect Bluetooth state changes
+        // Collect Wearables connection state changes
         lifecycleScope.launch {
-            bluetoothManager.connectionState.collect { state ->
+            wearablesManager.connectionState.collect { state ->
                 when (state) {
                     is ConnectionState.Disconnected -> {
                         bluetoothStatus = "Déconnecté"
@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
 
         // Collect discovered devices
         lifecycleScope.launch {
-            bluetoothManager.discoveredDevices.collect { devices ->
+            wearablesManager.discoveredDevices.collect { devices ->
                 discoveredDevices = devices
                 if (devices.isNotEmpty() && isScanning) {
                     isScanning = false
@@ -125,6 +125,7 @@ class MainActivity : ComponentActivity() {
                             updateStatus = updateStatus,
                             currentVersion = currentVersion,
                             onConnectBluetooth = { handleBluetoothConnection() },
+                            onRegisterWearables = { registerWithMetaAI() },
                             isBluetoothConnected = isBluetoothConnected,
                             bluetoothStatus = bluetoothStatus
                         )
@@ -156,7 +157,7 @@ class MainActivity : ComponentActivity() {
                             },
                             onDismiss = {
                                 showDeviceSelection = false
-                                bluetoothManager.stopScanning()
+                                wearablesManager.stopScanning()
                             }
                         )
                     }
@@ -256,10 +257,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun registerWithMetaAI() {
+        wearablesManager.startRegistration(this)
+        Toast.makeText(
+            this,
+            "Ouverture de Meta AI app pour enregistrement...",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
     private fun handleBluetoothConnection() {
         if (isBluetoothConnected) {
             // Disconnect
-            bluetoothManager.disconnect()
+            wearablesManager.disconnect()
         } else {
             // Check permissions and start scanning
             if (checkBluetoothPermissions()) {
@@ -335,16 +345,16 @@ class MainActivity : ComponentActivity() {
 
     private fun startBluetoothScan() {
         showDeviceSelection = true
-        bluetoothManager.startScanning()
+        wearablesManager.startScanning()
     }
 
     private fun connectToDevice(device: BluetoothDevice) {
-        bluetoothManager.connectToDevice(device)
+        wearablesManager.connectToDevice(device)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        bluetoothManager.cleanup()
+        wearablesManager.cleanup()
     }
 }
 
