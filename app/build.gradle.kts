@@ -12,8 +12,8 @@ android {
         applicationId = "com.ichaiwizm.metaraybanassistant"
         minSdk = 29  // Android 10 - Required by Meta SDK
         targetSdk = 34
-        versionCode = 12
-        versionName = "2.1.0"
+        versionCode = 13
+        versionName = "2.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

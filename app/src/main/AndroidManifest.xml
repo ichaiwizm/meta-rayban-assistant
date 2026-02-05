@@ -27,10 +27,15 @@
         android:theme="@style/Theme.MetaRayBanAssistant"
         tools:targetApi="31">
 
-        <!-- Meta Application ID (Use 0 for Developer Mode) -->
+        <!-- Meta Application ID -->
         <meta-data
             android:name="com.meta.wearable.mwdat.APPLICATION_ID"
-            android:value="0" />
+            android:value="1211383237748387" />
+
+        <!-- Meta Client Token -->
+        <meta-data
+            android:name="com.meta.wearable.mwdat.CLIENT_TOKEN"
+            android:value="AR|1211383237748387|e1c74cbd2e1550f027b9706888fcc8e1" />
 
         <activity
             android:name=".MainActivity"
