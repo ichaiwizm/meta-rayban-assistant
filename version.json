@@ -1,8 +1,8 @@
 {
-  "versionCode": 13,
-  "versionName": "2.1.1",
-  "changelog": "🔧 v2.1.1 - Fix Enregistrement Meta\n\n✅ CORRIGÉ:\n- Vrai Meta Application ID ajouté\n- Client Token pour authentification SDK\n- Fix erreur d'ouverture de lien dans Meta AI\n- Deep linking fonctionnel\n\n✨ Fonctionnalités:\n- Meta Wearables SDK v0.4.0\n- Enregistrement via Meta AI app\n- Connexion aux lunettes Meta Ray-Ban\n- Notification vocale (beep) dans lunettes\n- Découverte automatique devices\n- Audio routing via Bluetooth HFP\n\n📝 Prérequis:\n- Meta AI app installée\n- Lunettes configurées dans Meta AI\n- Android 10+ (API 29)",
-  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.1.1/app-release.apk",
+  "versionCode": 14,
+  "versionName": "2.1.2",
+  "changelog": "🎨 v2.1.2 - UI Améliorée\n\n✅ NOUVEAU:\n- LED virtuel 🟢/⚫ dans l'app\n- Affichage SESSION ACTIVE quand connecté\n- Explication LED vert sur lunettes\n- Confirmation notification audio envoyée\n- Icône lunettes 👓 dans titre\n- Meilleur contraste et lisibilité\n\n✨ Fonctionnalités:\n- Meta Wearables SDK v0.4.0\n- Enregistrement Meta AI fonctionnel\n- Connexion lunettes Meta Ray-Ban\n- Notification vocale (beep)\n- Statut session en temps réel\n- UI claire et compréhensible\n\n📝 LED vert qui clignote = Session OK!",
+  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.1.2/app-release.apk",
   "releaseDate": "2026-02-05",
   "minAndroidVersion": 29,
   "targetAndroidVersion": 34
