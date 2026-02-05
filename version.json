@@ -1,8 +1,8 @@
 {
-  "versionCode": 11,
-  "versionName": "2.0.1",
-  "changelog": "🔧 v2.0.1 - Bluetooth Scanner Fix\n\n✅ CORRIGÉ:\n- Scanner Bluetooth fonctionnel avec API Android\n- Détection des appareils appairés\n- Affichage du signal RSSI\n- Découverte pendant le scan\n\n✨ Fonctionnalités:\n- Scan Bluetooth réel (pas de stub)\n- Sélection d'appareils\n- Connexion simulée\n- Permissions gérées\n\n📝 Notes:\n- Appaire d'abord via Paramètres Bluetooth\n- Connexion Meta SDK à venir",
-  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.0.1/meta-rayban-assistant-v2.0.1.apk",
+  "versionCode": 12,
+  "versionName": "2.1.0",
+  "changelog": "🎉 v2.1.0 - Meta SDK Integration Réelle\n\n✅ NOUVEAU:\n- Meta Wearables SDK v0.4.0 intégré\n- Enregistrement via Meta AI app\n- Connexion réelle aux lunettes Meta Ray-Ban\n- Notification vocale (beep) sur les lunettes\n- Gestion du cycle de vie des sessions\n\n✨ Fonctionnalités:\n- Registration flow avec deep linking\n- Découverte automatique des devices Meta\n- Audio routing via Bluetooth HFP\n- États réels (pas de simulation)\n- Developer Mode activé\n\n📝 Prérequis:\n- Lunettes configurées avec Meta AI app\n- Android 10+ (API 29)",
+  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.1.0/app-release.apk",
   "releaseDate": "2026-02-05",
   "minAndroidVersion": 29,
   "targetAndroidVersion": 34
