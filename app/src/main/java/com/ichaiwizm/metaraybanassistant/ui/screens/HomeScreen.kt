@@ -106,16 +106,26 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         // Bluetooth Section
-        Text(
-            text = "Meta Ray-Ban Glasses",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Center
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "👓",
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = "Meta Ray-Ban",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Bluetooth status
+        // Status Card with visual indicator
         if (bluetoothStatus.isNotEmpty()) {
             Card(
                 modifier = Modifier
@@ -128,18 +138,60 @@ fun HomeScreen(
                         MaterialTheme.colorScheme.surfaceVariant
                 )
             ) {
-                Text(
-                    text = bluetoothStatus,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (isBluetoothConnected)
-                        MaterialTheme.colorScheme.onPrimaryContainer
-                    else
-                        MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
-                )
+                        .padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Visual LED indicator
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = if (isBluetoothConnected) "🟢" else "⚫",
+                            style = MaterialTheme.typography.headlineLarge
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = if (isBluetoothConnected) "SESSION ACTIVE" else "DÉCONNECTÉ",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = if (isBluetoothConnected)
+                                MaterialTheme.colorScheme.onPrimaryContainer
+                            else
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Status message
+                    Text(
+                        text = bluetoothStatus,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = if (isBluetoothConnected)
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+
+                    // Additional info when connected
+                    if (isBluetoothConnected) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        HorizontalDivider(
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.2f)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "✅ LED vert sur lunettes = Session SDK active\n💡 Notification audio envoyée avec succès",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }
         }
 
