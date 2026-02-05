@@ -1,8 +1,8 @@
 {
-  "versionCode": 14,
-  "versionName": "2.1.2",
-  "changelog": "🎨 v2.1.2 - UI Améliorée\n\n✅ NOUVEAU:\n- LED virtuel 🟢/⚫ dans l'app\n- Affichage SESSION ACTIVE quand connecté\n- Explication LED vert sur lunettes\n- Confirmation notification audio envoyée\n- Icône lunettes 👓 dans titre\n- Meilleur contraste et lisibilité\n\n✨ Fonctionnalités:\n- Meta Wearables SDK v0.4.0\n- Enregistrement Meta AI fonctionnel\n- Connexion lunettes Meta Ray-Ban\n- Notification vocale (beep)\n- Statut session en temps réel\n- UI claire et compréhensible\n\n📝 LED vert qui clignote = Session OK!",
-  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.1.2/app-release.apk",
+  "versionCode": 15,
+  "versionName": "2.1.3",
+  "changelog": "🔧 v2.1.3 - Fix Connexion\n\n✅ CORRIGÉ:\n- Affiche connecté immédiatement\n- Plus besoin d'attendre SessionState\n- LED vert + App = synchronisés!\n- else ajouté pour tous états\n- PAUSED ne déconnecte plus\n\n✨ Fonctionnalités:\n- 🟢 SESSION ACTIVE visible\n- Meta Wearables SDK v0.4.0\n- Enregistrement Meta AI OK\n- Connexion lunettes Meta Ray-Ban\n- Notification vocale (beep)\n- UI claire et belle\n\n📝 LED vert clignote = Connecté!",
+  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.1.3/app-release.apk",
   "releaseDate": "2026-02-05",
   "minAndroidVersion": 29,
   "targetAndroidVersion": 34
