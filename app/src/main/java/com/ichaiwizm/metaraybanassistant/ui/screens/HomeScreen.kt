@@ -127,72 +127,75 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Status Card with visual indicator
-        if (bluetoothStatus.isNotEmpty()) {
-            Card(
+        // Status Card - TOUJOURS AFFICHÉE
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = if (isBluetoothConnected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
+                    MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (isBluetoothConnected)
-                        MaterialTheme.colorScheme.primaryContainer
-                    else
-                        MaterialTheme.colorScheme.surfaceVariant
-                )
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                // Visual LED indicator
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    // Visual LED indicator
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = if (isBluetoothConnected) "🟢" else "⚫",
-                            style = MaterialTheme.typography.headlineLarge
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = if (isBluetoothConnected) "SESSION ACTIVE" else "DÉCONNECTÉ",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = if (isBluetoothConnected)
-                                MaterialTheme.colorScheme.onPrimaryContainer
-                            else
-                                MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Status message
                     Text(
-                        text = bluetoothStatus,
-                        style = MaterialTheme.typography.bodyLarge,
+                        text = if (isBluetoothConnected) "🟢" else "⚫",
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = if (isBluetoothConnected) "SESSION ACTIVE" else "NON CONNECTÉ",
+                        style = MaterialTheme.typography.titleLarge,
                         color = if (isBluetoothConnected)
                             MaterialTheme.colorScheme.onPrimaryContainer
                         else
-                            MaterialTheme.colorScheme.onSurfaceVariant,
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Status message
+                Text(
+                    text = if (bluetoothStatus.isNotEmpty())
+                        bluetoothStatus
+                    else if (isRegistered)
+                        "Prêt à connecter aux lunettes"
+                    else
+                        "Enregistre-toi d'abord avec Meta AI",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = if (isBluetoothConnected)
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+
+                // Additional info when connected
+                if (isBluetoothConnected) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.2f)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "✅ LED vert sur lunettes = Session SDK active\n💡 Notification audio envoyée avec succès",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
                         textAlign = TextAlign.Center
                     )
-
-                    // Additional info when connected
-                    if (isBluetoothConnected) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        HorizontalDivider(
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.2f)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "✅ LED vert sur lunettes = Session SDK active\n💡 Notification audio envoyée avec succès",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
-                            textAlign = TextAlign.Center
-                        )
-                    }
                 }
             }
         }
@@ -246,6 +249,7 @@ fun HomeScreen(
         // Connect button
         Button(
             onClick = onConnectBluetooth,
+            enabled = isRegistered,  // Désactivé si pas enregistré
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -257,19 +261,35 @@ fun HomeScreen(
                 ButtonDefaults.buttonColors()
         ) {
             Text(
-                text = if (isBluetoothConnected) "Déconnecter" else "2. Connecter aux lunettes",
+                text = if (isBluetoothConnected)
+                    "Déconnecter"
+                else if (isRegistered)
+                    "2. Connecter aux lunettes"
+                else
+                    "2. Connecter (enregistrement requis)",
                 style = MaterialTheme.typography.titleMedium
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = "ℹ️ Première utilisation: enregistre-toi d'abord avec Meta AI app",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
+        // Instructions
+        if (!isRegistered) {
+            Text(
+                text = "⚠️ Enregistre-toi d'abord avec Meta AI pour déverrouiller la connexion",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        } else if (!isBluetoothConnected) {
+            Text(
+                text = "✅ Prêt! Clique sur 'Connecter' pour rechercher tes lunettes",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
     }
 }
