@@ -17,6 +17,8 @@ fun HomeScreen(
     onRegisterWearables: () -> Unit = {},
     isBluetoothConnected: Boolean = false,
     bluetoothStatus: String = "",
+    registrationStatus: String = "",
+    isRegistered: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -197,15 +199,44 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Registration status card
+        if (registrationStatus.isNotEmpty()) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (isRegistered)
+                        MaterialTheme.colorScheme.tertiaryContainer
+                    else
+                        MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Text(
+                    text = registrationStatus,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (isRegistered)
+                        MaterialTheme.colorScheme.onTertiaryContainer
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+        }
+
         // Register button (first time setup)
         OutlinedButton(
             onClick = onRegisterWearables,
+            enabled = !isRegistered,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
         ) {
             Text(
-                text = "1. S'enregistrer avec Meta AI",
+                text = if (isRegistered) "✅ Enregistré" else "1. S'enregistrer avec Meta AI",
                 style = MaterialTheme.typography.titleMedium
             )
         }

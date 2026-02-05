@@ -36,6 +36,9 @@ class WearablesManager(private val context: Context) {
     private val _discoveredDevices = MutableStateFlow<List<BluetoothDevice>>(emptyList())
     val discoveredDevices: StateFlow<List<BluetoothDevice>> = _discoveredDevices.asStateFlow()
 
+    private val _registrationState = MutableStateFlow<RegistrationState?>(null)
+    val registrationState: StateFlow<RegistrationState?> = _registrationState.asStateFlow()
+
     private val scope = CoroutineScope(Dispatchers.Main + Job())
     private var currentDeviceId: DeviceIdentifier? = null
     private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -50,6 +53,8 @@ class WearablesManager(private val context: Context) {
             scope.launch {
                 Wearables.registrationState.collect { state ->
                     Log.d(TAG, "Registration state: $state")
+                    _registrationState.value = state
+
                     when (state) {
                         is RegistrationState.Registered -> {
                             Log.d(TAG, "App is registered with Meta AI")

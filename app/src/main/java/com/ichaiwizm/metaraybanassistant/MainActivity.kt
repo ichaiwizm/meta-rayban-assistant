@@ -44,6 +44,10 @@ class MainActivity : ComponentActivity() {
     private var discoveredDevices by mutableStateOf<List<BluetoothDevice>>(emptyList())
     private var isScanning by mutableStateOf(false)
 
+    // Registration state
+    private var registrationStatus by mutableStateOf("")
+    private var isRegistered by mutableStateOf(false)
+
     companion object {
         private const val BLUETOOTH_PERMISSION_REQUEST_CODE = 1001
     }
@@ -111,6 +115,43 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Collect registration state
+        lifecycleScope.launch {
+            wearablesManager.registrationState.collect { state ->
+                when (state) {
+                    is com.meta.wearable.dat.core.types.RegistrationState.Registered -> {
+                        registrationStatus = "✅ Enregistré avec Meta AI"
+                        isRegistered = true
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Enregistrement réussi!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    is com.meta.wearable.dat.core.types.RegistrationState.Registering -> {
+                        registrationStatus = "Enregistrement en cours..."
+                        isRegistered = false
+                    }
+                    is com.meta.wearable.dat.core.types.RegistrationState.Available -> {
+                        registrationStatus = "Prêt pour enregistrement"
+                        isRegistered = false
+                    }
+                    is com.meta.wearable.dat.core.types.RegistrationState.Unavailable -> {
+                        registrationStatus = "❌ Enregistrement indisponible"
+                        isRegistered = false
+                    }
+                    is com.meta.wearable.dat.core.types.RegistrationState.Unregistering -> {
+                        registrationStatus = "Désenregistrement..."
+                        isRegistered = false
+                    }
+                    null -> {
+                        registrationStatus = ""
+                        isRegistered = false
+                    }
+                }
+            }
+        }
+
         setContent {
             MetaRayBanAssistantTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -127,7 +168,9 @@ class MainActivity : ComponentActivity() {
                             onConnectBluetooth = { handleBluetoothConnection() },
                             onRegisterWearables = { registerWithMetaAI() },
                             isBluetoothConnected = isBluetoothConnected,
-                            bluetoothStatus = bluetoothStatus
+                            bluetoothStatus = bluetoothStatus,
+                            registrationStatus = registrationStatus,
+                            isRegistered = isRegistered
                         )
                     }
 
