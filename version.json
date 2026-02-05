@@ -1,8 +1,8 @@
 {
-  "versionCode": 15,
-  "versionName": "2.1.3",
-  "changelog": "🔧 v2.1.3 - Fix Connexion\n\n✅ CORRIGÉ:\n- Affiche connecté immédiatement\n- Plus besoin d'attendre SessionState\n- LED vert + App = synchronisés!\n- else ajouté pour tous états\n- PAUSED ne déconnecte plus\n\n✨ Fonctionnalités:\n- 🟢 SESSION ACTIVE visible\n- Meta Wearables SDK v0.4.0\n- Enregistrement Meta AI OK\n- Connexion lunettes Meta Ray-Ban\n- Notification vocale (beep)\n- UI claire et belle\n\n📝 LED vert clignote = Connecté!",
-  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.1.3/app-release.apk",
+  "versionCode": 16,
+  "versionName": "2.2.0",
+  "changelog": "🎉 v2.2.0 - Enregistrement VISIBLE!\n\n✅ NOUVEAU:\n- État enregistrement affiché en temps réel\n- Toast 'Enregistrement réussi!' \n- Card verte quand enregistré\n- Bouton '✅ Enregistré' désactivé après\n- Statuts clairs et visibles\n\n✨ Flow complet:\n1. S'enregistrer avec Meta AI\n2. Meta AI ouvre et connecte\n3. Retour app → BOOM 🎉 Toast!\n4. Card verte + Bouton désactivé\n5. Connecter aux lunettes\n\n📝 Tu VOIS maintenant ce qui se passe!",
+  "downloadUrl": "https://github.com/ichaiwizm/meta-rayban-assistant/releases/download/v2.2.0/app-release.apk",
   "releaseDate": "2026-02-05",
   "minAndroidVersion": 29,
   "targetAndroidVersion": 34
