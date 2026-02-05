@@ -184,25 +184,29 @@ class WearablesManager(private val context: Context) {
 
                     currentDeviceId = deviceIdentifier
 
+                    // Mark as connected immediately since device was found
+                    _connectionState.value = ConnectionState.Connected(device)
+                    Log.d(TAG, "Device found - Marked as connected")
+
                     // Observe device session state
                     Wearables.getDeviceSessionState(deviceIdentifier).collect { state ->
                         Log.d(TAG, "Session state: $state")
 
                         when (state) {
                             SessionState.RUNNING -> {
-                                _connectionState.value = ConnectionState.Connected(device)
-                                Log.d(TAG, "Session RUNNING - Connected!")
-
+                                Log.d(TAG, "Session RUNNING - Playing notification")
                                 // Play voice notification through glasses
                                 playVoiceNotification()
                             }
                             SessionState.PAUSED -> {
                                 Log.d(TAG, "Session PAUSED")
-                                _connectionState.value = ConnectionState.Error("Session en pause")
                             }
                             SessionState.STOPPED -> {
-                                Log.d(TAG, "Session STOPPED")
+                                Log.d(TAG, "Session STOPPED - Disconnecting")
                                 _connectionState.value = ConnectionState.Disconnected
+                            }
+                            else -> {
+                                Log.d(TAG, "Session state not handled: $state")
                             }
                         }
                     }
