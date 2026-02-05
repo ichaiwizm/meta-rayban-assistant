@@ -93,3 +93,4 @@ lint/tmp/
 # Secrets and API keys
 secrets.properties
 api_keys.properties
+gradle.properties

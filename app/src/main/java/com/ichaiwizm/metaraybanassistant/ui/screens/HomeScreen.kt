@@ -13,6 +13,9 @@ fun HomeScreen(
     onCheckUpdate: () -> Unit,
     updateStatus: String,
     currentVersion: String,
+    onConnectBluetooth: () -> Unit = {},
+    isBluetoothConnected: Boolean = false,
+    bluetoothStatus: String = "",
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -94,5 +97,70 @@ fun HomeScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        HorizontalDivider()
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Bluetooth Section
+        Text(
+            text = "Meta Ray-Ban Glasses",
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Bluetooth status
+        if (bluetoothStatus.isNotEmpty()) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (isBluetoothConnected)
+                        MaterialTheme.colorScheme.primaryContainer
+                    else
+                        MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Text(
+                    text = bluetoothStatus,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (isBluetoothConnected)
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Bluetooth button
+        Button(
+            onClick = onConnectBluetooth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = if (isBluetoothConnected)
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error
+                )
+            else
+                ButtonDefaults.buttonColors()
+        ) {
+            Text(
+                text = if (isBluetoothConnected) "Déconnecter" else "Connecter aux lunettes",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
     }
 }

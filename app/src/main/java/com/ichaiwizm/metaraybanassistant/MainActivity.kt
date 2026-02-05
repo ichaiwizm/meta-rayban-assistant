@@ -15,8 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.ichaiwizm.metaraybanassistant.data.model.BluetoothDevice
+import com.ichaiwizm.metaraybanassistant.data.model.ConnectionState
 import com.ichaiwizm.metaraybanassistant.data.source.ApkInstaller
+import com.ichaiwizm.metaraybanassistant.data.source.BluetoothManager
 import com.ichaiwizm.metaraybanassistant.data.source.UpdateChecker
+import com.ichaiwizm.metaraybanassistant.ui.screens.DeviceSelectionScreen
 import com.ichaiwizm.metaraybanassistant.ui.screens.HomeScreen
 import com.ichaiwizm.metaraybanassistant.ui.theme.MetaRayBanAssistantTheme
 import kotlinx.coroutines.launch
@@ -24,11 +28,25 @@ import java.io.File
 
 class MainActivity : ComponentActivity() {
     private val updateChecker = UpdateChecker()
+    private val bluetoothManager by lazy { BluetoothManager(applicationContext) }
+
+    // Update state
     private var updateStatus by mutableStateOf("")
     private var showUpdateDialog by mutableStateOf(false)
     private var downloadProgress by mutableStateOf(0)
     private var isDownloading by mutableStateOf(false)
     private var pendingApkFile: File? = null
+
+    // Bluetooth state
+    private var bluetoothStatus by mutableStateOf("")
+    private var isBluetoothConnected by mutableStateOf(false)
+    private var showDeviceSelection by mutableStateOf(false)
+    private var discoveredDevices by mutableStateOf<List<BluetoothDevice>>(emptyList())
+    private var isScanning by mutableStateOf(false)
+
+    companion object {
+        private const val BLUETOOTH_PERMISSION_REQUEST_CODE = 1001
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +67,50 @@ class MainActivity : ComponentActivity() {
             "1.0.0"
         }
 
+        // Collect Bluetooth state changes
+        lifecycleScope.launch {
+            bluetoothManager.connectionState.collect { state ->
+                when (state) {
+                    is ConnectionState.Disconnected -> {
+                        bluetoothStatus = "Déconnecté"
+                        isBluetoothConnected = false
+                    }
+                    is ConnectionState.Scanning -> {
+                        bluetoothStatus = "Recherche d'appareils..."
+                        isScanning = true
+                    }
+                    is ConnectionState.Connecting -> {
+                        bluetoothStatus = "Connexion en cours..."
+                        isBluetoothConnected = false
+                    }
+                    is ConnectionState.Connected -> {
+                        bluetoothStatus = "Connecté à ${state.device.name}"
+                        isBluetoothConnected = true
+                        showDeviceSelection = false
+                    }
+                    is ConnectionState.Error -> {
+                        bluetoothStatus = "Erreur: ${state.message}"
+                        isBluetoothConnected = false
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Erreur Bluetooth: ${state.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+
+        // Collect discovered devices
+        lifecycleScope.launch {
+            bluetoothManager.discoveredDevices.collect { devices ->
+                discoveredDevices = devices
+                if (devices.isNotEmpty() && isScanning) {
+                    isScanning = false
+                }
+            }
+        }
+
         setContent {
             MetaRayBanAssistantTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -61,7 +123,10 @@ class MainActivity : ComponentActivity() {
                         HomeScreen(
                             onCheckUpdate = { checkForUpdates() },
                             updateStatus = updateStatus,
-                            currentVersion = currentVersion
+                            currentVersion = currentVersion,
+                            onConnectBluetooth = { handleBluetoothConnection() },
+                            isBluetoothConnected = isBluetoothConnected,
+                            bluetoothStatus = bluetoothStatus
                         )
                     }
 
@@ -78,6 +143,21 @@ class MainActivity : ComponentActivity() {
                             },
                             progress = downloadProgress,
                             isDownloading = isDownloading
+                        )
+                    }
+
+                    // Device selection bottom sheet
+                    if (showDeviceSelection) {
+                        DeviceSelectionScreen(
+                            devices = discoveredDevices,
+                            isScanning = isScanning,
+                            onDeviceSelected = { device ->
+                                connectToDevice(device)
+                            },
+                            onDismiss = {
+                                showDeviceSelection = false
+                                bluetoothManager.stopScanning()
+                            }
                         )
                     }
                 }
@@ -174,6 +254,97 @@ class MainActivity : ComponentActivity() {
                 ).show()
             }
         }
+    }
+
+    private fun handleBluetoothConnection() {
+        if (isBluetoothConnected) {
+            // Disconnect
+            bluetoothManager.disconnect()
+        } else {
+            // Check permissions and start scanning
+            if (checkBluetoothPermissions()) {
+                startBluetoothScan()
+            } else {
+                requestBluetoothPermissions()
+            }
+        }
+    }
+
+    private fun checkBluetoothPermissions(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.BLUETOOTH_SCAN
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.BLUETOOTH_CONNECT
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.BLUETOOTH
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.BLUETOOTH_ADMIN
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun requestBluetoothPermissions() {
+        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            arrayOf(
+                android.Manifest.permission.BLUETOOTH_SCAN,
+                android.Manifest.permission.BLUETOOTH_CONNECT
+            )
+        } else {
+            arrayOf(
+                android.Manifest.permission.BLUETOOTH,
+                android.Manifest.permission.BLUETOOTH_ADMIN
+            )
+        }
+
+        ActivityCompat.requestPermissions(
+            this,
+            permissions,
+            BLUETOOTH_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == BLUETOOTH_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                startBluetoothScan()
+            } else {
+                bluetoothStatus = "Permissions Bluetooth refusées"
+                Toast.makeText(
+                    this,
+                    "Les permissions Bluetooth sont requises pour connecter les lunettes",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun startBluetoothScan() {
+        showDeviceSelection = true
+        bluetoothManager.startScanning()
+    }
+
+    private fun connectToDevice(device: BluetoothDevice) {
+        bluetoothManager.connectToDevice(device)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bluetoothManager.cleanup()
     }
 }
 
