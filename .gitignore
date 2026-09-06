@@ -94,3 +94,8 @@ lint/tmp/
 secrets.properties
 api_keys.properties
 gradle.properties
+
+# Release signing material — never commit
+*.jks
+*.keystore
+keystore.properties
